@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+escape_input() {
+    echo "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
 if ! command -v fzf &> /dev/null
 then
     echo "fzf could not be found"
@@ -11,9 +15,10 @@ buffer_name="tmux_capture_buffer"
 
 tmux capture-pane -J -b "$buffer_name"
 captured_content=$(tmux show-buffer -b "$buffer_name")
+escaped_content=$(escape_input "$captured_content")
 
-files=$(echo "$captured_content" | awk '{
-    while (match($0, /[^[:space:](]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+/)) {
+files=$(echo "$escaped_content" | awk '{
+    while (match($0, /[^[:space:]("]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+/)) {
         path = substr($0, RSTART, RLENGTH)
         if (!seen[path]++) {
             print path
