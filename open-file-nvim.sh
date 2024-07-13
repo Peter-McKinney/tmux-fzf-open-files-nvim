@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-if ! command -v fzf &> /dev/null
-then
-    echo "fzf could not be found"
-    echo "Please install fzf https://github.com/junegunn/fzf"
-    exit 1
-fi
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$CURRENT_DIR/scripts/check_fzf_install.sh"
+
+check_fzf
 
 remove_invalid_path_characters() {
     echo "$1" | awk '{ gsub(/[^[:alnum:][:space:]._~\/-]/, ""); print }'
@@ -34,13 +33,13 @@ files=$(echo "$sanitized_content" | awk '{
     }
 }')
 
-#handle ~ home expansion 
+#handle ~ home expansion
 files=$(echo "$files" | sed 's/~/\$HOME/g')
 
 if [ -z "$files" ]; then
-  echo "No files found."
+    echo "No files found."
 else
-  tmux split-window -h -c "#{pane_current_path}" "echo \"$files\" | fzf -m | xargs -I {} $EDITOR {}"
+    tmux split-window -h -c "#{pane_current_path}" "echo \"$files\" | fzf -m | xargs -I {} $EDITOR {}"
 fi
 
 tmux delete-buffer -b "$buffer_name"
