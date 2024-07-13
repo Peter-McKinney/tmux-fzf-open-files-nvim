@@ -16,4 +16,4 @@ Use `prefix + I` to install the plugin and source your ~/.tmux.conf by `prefix +
 
 ### Usage
 
-The default binding uses `f` so `prefix + f` will run the process to find files in the current pane output.
+The default binding uses `y` so `prefix + y` will run the process to find files in the current pane output.
