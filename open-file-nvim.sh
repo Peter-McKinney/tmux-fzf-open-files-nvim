@@ -1,18 +1,29 @@
 #!/bin/bash
 
-cursor_position=$(tmux display-message -p "#{cursor_y} #{cursor_x}")
-cursor_y=$(echo $cursor_position | cut -d' ' -f1)
-
-start_line=$((cursor_y - 10))
-end_line=$((cursor_y + 10))
-
-captured_content=$(tmux capture-pane -pS $start_line -pE $end_line)
-
-filename=$(captured_content | fzf --query=$(tmux display-message -p "#{pane_current_command}"))
-
-if [ -z "$filename" ]; then
-  echo "No filename found under current cursor."
-  exit 1
+if ! command -v fzf &> /dev/null
+then
+    echo "fzf could not be found"
+    echo "Please install fzf https://github.com/junegunn/fzf"
+    exit 1
 fi
 
-tmux split-window -h -c "#{pane_current_path}" "$EDITOR $filename"
+buffer_name="tmux_capture_buffer"
+
+tmux capture-pane -J -b "$buffer_name"
+captured_content=$(tmux show-buffer -b "$buffer_name")
+
+files=$(echo "$captured_content" | awk '{
+    while (match($0, /[^[:space:](]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+/)) {
+        path = substr($0, RSTART, RLENGTH)
+        if (!seen[path]++) {
+            print path
+        }
+        $0 = substr($0, RSTART + RLENGTH)
+    }
+}')
+
+if [ -z "$files" ]; then
+  echo "No files found."
+else
+  tmux split-window -h -c "#{pane_current_path}" "echo \"$files\" | fzf -m | xargs -I {} $EDITOR {}"
+fi
