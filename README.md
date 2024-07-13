@@ -14,6 +14,12 @@ set -g @plugin 'Peter-McKinney/tmux-open-file-nvim'
 
 Use `prefix + I` to install the plugin and source your ~/.tmux.conf by `prefix + :source ~/.tmux.conf`
 
+Make sure to have your editor environment variable set to neovim:
+
+```bash
+export EDITOR='nvim'
+```
+
 ### Usage
 
 The default binding uses `o` so `prefix + o` will run the process to find files in the current pane output. A new horizontal pane will be opened to the right of the current pane. The pane visible text will be sent to `fzf -m` multi select mode so that multiple files may be selected and sent to the $EDITOR.
