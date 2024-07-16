@@ -7,12 +7,7 @@ source "$CURRENT_DIR/scripts/check_fzf_install.sh"
 check_fzf
 
 if [ -z "$(tmux show-option -gqv @open-file-nvim-key)" ]; then
-    tmux bind -n 'o' open_files
+    tmux bind -n 'o' run-shell "$CURRENT_DIR/open-file-nvim.sh";
 else
-    tmux bind -n "$(tmux show-option -gqv @open-file-nvim-key)" open_files
+    tmux bind -n "$(tmux show-option -gqv @open-file-nvim-key)" run-shell "$CURRENT_DIR/open-file-nvim.sh";
 fi
-
-open_files() {
-    run-shell "$CURRENT_DIR/open-file-nvim.sh";
-}
-
