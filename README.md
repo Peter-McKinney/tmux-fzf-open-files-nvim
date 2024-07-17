@@ -25,4 +25,10 @@ Please make sure that fzf is installed by following the directions over at: http
 
 ### Usage
 
+#### Capture the output visible in the current pane: 
+
 The default binding uses `o` so `prefix + o` will run the process to find files in the current pane output. A new horizontal pane will be opened to the right of the current pane. The pane visible text will be sent to `fzf -m` multi select mode so that multiple files may be selected and sent to the $EDITOR.
+
+#### Capture the entire history of the current pane:
+
+The default binding uses `O` so `prefix + O` will run the above process for the entire history of the pane.
