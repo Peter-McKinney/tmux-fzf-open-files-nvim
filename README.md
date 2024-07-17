@@ -12,7 +12,7 @@ Using TPM, add the following lines to your ~/.tmux.conf:
 set -g @plugin 'Peter-McKinney/tmux-open-file-nvim'
 ```
 
-Use `prefix + I` to install the plugin and source your ~/.tmux.conf by `prefix + :source ~/.tmux.conf`
+Use `prefix + I` to install the plugin which should also source your ~/.tmux.conf but just in case: `prefix + :source ~/.tmux.conf`
 
 Make sure to have your editor environment variable set to neovim:
 
