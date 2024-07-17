@@ -11,14 +11,18 @@ check_fzf
 buffer_name="tmux_capture_buffer"
 
 if [ $# -eq 0 ]; then
+    # capture content visible in the current pane
     tmux capture-pane -J -b "$buffer_name"
 else
+    # capture all history in the current pane
     tmux capture-pane -J -S - -E - -b "$buffer_name"
 fi
 
 captured_content=$(tmux show-buffer -b "$buffer_name")
-sanitized_content=$(sanitize_pane_output "$captured_content")
-files=$(parse_files "$sanitized_content")
+
+captured_files=$(parse_files "$captured_content")
+#only sanitize from matching lines
+files=$(sanitize_pane_output "$captured_files")
 
 if [ -z "$files" ]; then
     echo "No files found."

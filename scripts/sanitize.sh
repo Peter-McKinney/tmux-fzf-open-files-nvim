@@ -1,12 +1,16 @@
+source "$CURRENT_DIR/awk_pane_files.sh"
+
+# remove http or ftp urls.
 sanitize_pane_output() {
-    # remove http or ftp urls.
-    sanitized_content=$(remove_invalid_path_characters "$1")
+    sanitized_content=$(remove_invalid_characters "$1")
     sanitized_content=$(echo "$sanitized_content" | sed 's/http[^ ]*//g')
-    sanitized_content=$(echo "$sanitized_content" | sed 's/ftp[^ ]*//g');
+    sanitized_content=$(echo "$sanitized_content" | sed 's/ftp[^ ]*//g')
+    sanitized_content=$(handle_home_folder_expansion "$sanitized_content")
     echo "$sanitized_content"
 }
 
-# remove any characters that are not valid in a file path
-remove_invalid_path_characters() {
-    echo "$1" | awk '{ gsub(/[^[:alnum:][:space:]._~\/-]/, ""); print }'
+#handle ~ home expansion
+handle_home_folder_expansion() {
+    files=$(echo "$1" | sed "s/~/\$HOME/g")
+    echo "$files"
 }

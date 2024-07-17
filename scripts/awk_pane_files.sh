@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
+# awk for anything that resembles a file path with a file extension on the end.
+# only return unique paths
+# temporarily override locale settings for awk command
 parse_files() {
-    # awk for anything that resembles a file path with a file extension on the end.
-    # only return unique paths
-    files=$(echo "$1" | awk '{
-    while (match($0, /[^[:space:]]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+/)) {
+    files=$(echo "$1" | LC_ALL=C awk '{
+    while (match($0, /[^[:space:]]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+(:[0-9]+:[0-9]+)?/)) {
         path = substr($0, RSTART, RLENGTH)
         if (!seen[path]++) {
             print path
@@ -13,8 +14,12 @@ parse_files() {
     }
     }')
 
-    #handle ~ home expansion
-    files=$(echo "$files" | sed 's/~/\$HOME/g')
-
     echo "$files"
+}
+
+# remove invliad file path characters by using gsub with an allow list regular expression
+# temporarily override locale settings for awk command
+remove_invalid_characters() {
+    pristine=$(echo "$1" | LC_ALL=C awk '{ gsub(/:[0-9]+:[0-9]+$/, "", $0); gsub(/[^[:alnum:][:space:]._~\/:-]/, ""); print }')
+    echo "$pristine"
 }
