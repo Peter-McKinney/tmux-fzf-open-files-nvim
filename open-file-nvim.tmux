@@ -15,5 +15,5 @@ fi
 if [ -z "$(tmux show-option -gqv @open-file-nvim-all-key)" ]; then
     tmux bind 'O' run-shell "$CURRENT_DIR/open-file-nvim.sh --all";
 else
-    tmux bind "$(tmux show-option -gqv @open-file-nvim-key)" run-shell "$CURRENT_DIR/open-file-nvim.sh --all";
+    tmux bind "$(tmux show-option -gqv @open-file-nvim-all-key)" run-shell "$CURRENT_DIR/open-file-nvim.sh --all";
 fi
