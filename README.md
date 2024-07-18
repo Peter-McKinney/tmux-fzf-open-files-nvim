@@ -24,6 +24,12 @@ export EDITOR='nvim'
 
 Please make sure that fzf is installed by following the directions over at: https://github.com/junegunn/fzf
 
+#### Change the default bindings
+
+```bash
+set -g @open-file-nvim-key C-m
+set -g @open-file-nvim-all-key C-M
+```
 
 ### Usage
 
