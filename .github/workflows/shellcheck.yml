@@ -1,4 +1,4 @@
-name: Run shellchec
+name: Run shellcheck
 
 on: [pull_request]
 
