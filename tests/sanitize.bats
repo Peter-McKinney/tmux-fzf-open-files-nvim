@@ -18,3 +18,14 @@
     echo "$result"
     [ "$result" = "" ]
 }
+
+@test "sanitize_pane_output should remove parens" {
+    input="(node_modules/jest-mock/build/index.js:839:25"
+
+    expected_result="node_modules/jest-mock/build/index.js"
+
+    result="$(sanitize_pane_output "$input")"
+    echo "$result"
+    echo "$expected_result"
+    [ "$result" = "$expected_result" ]
+}

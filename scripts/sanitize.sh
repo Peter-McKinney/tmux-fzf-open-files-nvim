@@ -6,7 +6,7 @@ source "$CURRENT_DIR/awk_pane_files.sh"
 
 sanitize_pane_output() {
     sanitized_content=$(remove_invalid_characters "$1")
-    sanitized_content=$(remove_http_content "$sanitized_content")
+    sanitized_content=$(remove_http_ftp "$sanitized_content")
     sanitized_content=$(handle_home_folder_expansion "$sanitized_content")
     echo "$sanitized_content"
 }
