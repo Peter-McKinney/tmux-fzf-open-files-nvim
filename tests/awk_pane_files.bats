@@ -7,6 +7,19 @@ source "$BATS_TEST_DIRNAME/../scripts/awk_pane_files.sh"
     [ "$result" = "here/is/a/file.txt" ]
 }
 
+@test "folder paths are ignored" {
+    result="$(parse_files "something with /home/person/something/else")"
+    [ "$result" = "" ]
+}
+
+@test "parse_files should return unique files only" {
+    result="$(parse_files "/home/pete/file.txt
+    /home/pete/file.txt
+    /home/pete/file.txt
+    /home/pete/file.txt")"
+    [ "$result" = "/home/pete/file.txt" ]
+}
+
 @test "remove invalid characters" {
     result="$(remove_invalid_characters "(&&here/is-dashes-in-name/a/file.txt)")"
     [ "$result" = "here/is-dashes-in-name/a/file.txt" ]
