@@ -7,7 +7,7 @@ sed -i "s|set -g @plugin 'Peter-McKinney/tmux-fzf-open-files-nvim'|#set -g @plug
 ~/.tmux/plugins/tpm/bin/clean_plugins
 
 # link this repository to the tmux plugins
-ln -s . ~/.tmux/plugins/tmux-fzf-open-files-nvim
+ln -s ~/github/tmux-fzf-open-files-nvim ~/.tmux/plugins/tmux-fzf-open-files-nvim
 
 # uncomment local link
 sed -i "s|#set -g @plugin 'tmux-plugins/tmux-fzf-open-files-nvim'|set -g @plugin 'tmux-plugins/tmux-fzf-open-files-nvim'|" ~/.tmux.conf
