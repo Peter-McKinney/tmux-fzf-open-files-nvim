@@ -22,7 +22,7 @@
 @test "sanitize_pane_output should remove parens" {
     input="(node_modules/jest-mock/build/index.js:839:25"
 
-    expected_result="node_modules/jest-mock/build/index.js"
+    expected_result="node_modules/jest-mock/build/index.js:839:25"
 
     result="$(sanitize_pane_output "$input")"
     echo "$result"
