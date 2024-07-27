@@ -27,9 +27,11 @@ files=$(sanitize_pane_output "$captured_files")
 if [ -z "$files" ]; then
     echo "No files found."
 else
+    # remove any empty or whitespace only entries before fzf
     # sed script will match :number:number at the end of a string for
     # supporting opening files at a target row, col location
     tmux split-window -h -c "#{pane_current_path}" "echo \"$files\" |
+        sed '/^[[:space:]]*$/d' |
         fzf -m |
         sed -E 's/([^:]+):([0-9]+):([0-9]+)/-c e \1 \| normal \2G\3/g' |
     xargs -I {} $EDITOR {}"
