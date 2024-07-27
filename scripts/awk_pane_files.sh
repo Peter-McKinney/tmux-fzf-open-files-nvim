@@ -20,6 +20,6 @@ parse_files() {
 # remove invliad file path characters by using gsub with an allow list regular expression
 # temporarily override locale settings for awk command
 remove_invalid_characters() {
-    pristine=$(echo "$1" | LC_ALL=C awk '{ gsub(/:[0-9]+:[0-9]+$/, "", $0); gsub(/[^[:alnum:][:space:]._~\/:-]/, ""); print }')
+    pristine=$(echo "$1" | LC_ALL=C awk '{ gsub(/[^[:alnum:][:space:].:_~\/-]/, "", $0); print }')
     echo "$pristine"
 }
