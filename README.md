@@ -2,8 +2,7 @@
 
 A plugin that creates a tmux binding to copy the currently selected panes content, filter out anything that isn't a file path, pass the file paths to fzf, then open the file path in your default $EDITOR. Currently, this plugin does not work in copy mode and will still only select the current panes output at the current cursor position (not the position of the cursor in copy mode) OR the entire pane history.
 
-https://github.com/user-attachments/assets/39b9cced-2b5f-45c8-8a14-b1a48c188c16
-
+https://github.com/user-attachments/assets/829acfa2-27eb-41b0-95c8-333a7d008810
 
 ### Installing
 
