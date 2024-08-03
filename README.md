@@ -69,3 +69,11 @@ bats tests
 #### PR Workflow
 
 We use [shellcheck](https://github.com/koalaman/shellcheck) to perform static analysis as a PR check. To install shellcheck locally refer to the installation guide in the shellcheck github. You can also use https://www.shellcheck.net/
+
+To run shellcheck on all files in the project locally:
+
+```bash
+ find . -name "*.sh" -print0 | xargs -0 shellcheck -x
+```
+
+Warnings will not cause the github action check to fail, only errors should be fixed. 
