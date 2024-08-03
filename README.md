@@ -76,4 +76,4 @@ To run shellcheck on all files in the project locally:
  find . -name "*.sh" -print0 | xargs -0 shellcheck -x
 ```
 
-Warnings will not cause the github action check to fail, only errors should be fixed. 
+Warnings will not cause the github action check to fail, only errors.
