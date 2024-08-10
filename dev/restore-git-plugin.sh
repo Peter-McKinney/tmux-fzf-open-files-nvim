@@ -7,4 +7,3 @@ sed -i "s|set -g @plugin 'tmux-plugins/tmux-fzf-open-files-nvim'|set -g @plugin 
 
 # install using tpm from the plugins folder
 ~/.tmux/plugins/tpm/bin/install_plugins
-
