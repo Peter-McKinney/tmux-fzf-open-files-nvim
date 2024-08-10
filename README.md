@@ -1,4 +1,4 @@
-# TMUX Open File nvim
+# TMUX fzf Open Files nvim
 
 A tmux plugin to parse terminal output for filenames and open them in neovim. It works by creating a tmux binding to copy the currently selected panes content, match output that is a file path ending in an extension or with location information 83:57, pass the file paths to fzf, and open the fzf selected files in your default $EDITOR (only tested with neovim currently). 
 
