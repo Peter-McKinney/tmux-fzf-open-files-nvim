@@ -35,7 +35,7 @@ Please make sure that fzf is installed by following the directions over at: http
 | Variable Name           | Description                                                           | Default Binding |
 |-------------------------|-----------------------------------------------------------------------|-----------------|
 | @open-file-nvim-key     | Parses the current visible pane output for filenames                  | C-o             |
-| @open-file-nvim-all-key | Parses the entire available history in the current pane for filenames | C-o             |
+| @open-file-nvim-all-key | Parses the entire available history in the current pane for filenames | C-O             |
 
 ### Capture the output visible in the current pane: 
 
