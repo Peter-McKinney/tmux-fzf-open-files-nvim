@@ -17,6 +17,7 @@ parse() {
 }
 
 buffer_name="fzf-files-buffer"
+temp_buffer="fzf-files-temp-buffer"
 files=()
 
 if [ "$1" = "--selected-pane-history" ]; then
@@ -30,8 +31,8 @@ elif [ "$1" = "--all-pane-history" ]; then
   while IFS= read -r pane; do
     pane_id=$(echo "$pane" | awk '{print $1}')
 
-    tmux capture-pane -t "$pane_id" -J -S - -E - -b "fzf_files_temp_buffer"
-    pane_output=$(tmux save-buffer -b "fzf_files_temp_buffer" -)
+    tmux capture-pane -t "$pane_id" -J -S - -E - -b "$temp_buffer"
+    pane_output=$(tmux save-buffer -b "$temp_buffer" -)
 
     tmux set-buffer -b "$buffer_name" -a "$pane_output"
   done <<<"$panes"
@@ -43,7 +44,7 @@ else
   files=("$(parse)")
 fi
 
-# TODO: figure out a way to remove this dupliated call
+# TODO: figure out a way to remove this duplicated call
 # calling parse files again to remove duplicates
 unique_files=$(parse_files "${files[@]}")
 
