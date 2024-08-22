@@ -5,7 +5,7 @@
 # temporarily override locale settings for awk command
 parse_files() {
   files=$(echo "$1" | LC_ALL=C awk '{
-    while (match($0, /[^[:space:]]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+(:[0-9]+:[0-9]+)?/)) {
+    while (match($0, /[^[:space:]"]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+(:[0-9]+:[0-9]+)?/)) {
         path = substr($0, RSTART, RLENGTH)
         if (!seen[path]++) {
             print path
