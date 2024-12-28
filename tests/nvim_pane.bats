@@ -15,6 +15,5 @@ teardown() {
 
 @test "should return first tmux nvim pane" {
     result="$(find_nvim_pane)"
-    echo "Result is $result"
     [ "$result" = "%1" ]
 }

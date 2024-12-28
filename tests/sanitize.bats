@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-. "$BATS_TEST_DIRNAME/../scripts/sanitize.sh"
+load scripts/sanitize.sh
 
 @test "handle home folder expansion" {
     result="$(handle_home_folder_expansion "~/something/readme.md")"
