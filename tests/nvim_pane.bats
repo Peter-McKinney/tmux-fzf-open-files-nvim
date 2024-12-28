@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source "$BATS_TEST_DIRNAME/../scripts/tmux_find_nvim_pane.sh"
+load scripts/tmux_find_nvim_pane.sh
 
 setup() {
     # using this bash function to mock the tmux command for this test
