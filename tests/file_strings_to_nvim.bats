@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load scripts/file_strings_to_nvim.sh
+source "$BATS_TEST_DIRNAME/../scripts/file_strings_to_nvim.sh"
 
 @test "should return files tabedit with line numbers" {
   result="$(to_tabedit_strings "/home/somefile.ts

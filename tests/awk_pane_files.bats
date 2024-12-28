@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load scripts/awk_pane_files.sh
+source "$BATS_TEST_DIRNAME/../scripts/awk_pane_files.sh"
 
 @test "parse_files should return a file path" {
     result="$(parse_files "something more text here/is/a/file.txt more text")"
