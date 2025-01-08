@@ -16,4 +16,4 @@ jobs:
 
       - name: Run shfmt
         run: |
-          shfmt -d -ci .
+          shfmt -d -i 2 -ci .
