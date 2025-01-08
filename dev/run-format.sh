@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-shfmt -i 2 -ci -w .
+shfmt -l -i 2 -w .
