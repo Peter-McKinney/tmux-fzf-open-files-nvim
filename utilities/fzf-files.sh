@@ -6,24 +6,12 @@ source "$CURRENT_DIR/../scripts/check_fzf_install.sh"
 source "$CURRENT_DIR/../scripts/sanitize.sh"
 source "$CURRENT_DIR/../scripts/awk_pane_files.sh"
 
-parse() {
-  captured_content=$(tmux show-buffer -b "$buffer_name")
-
-  captured_files=$(parse_files "$captured_content")
-  #only sanitize from matching lines
-  files=$(sanitize_pane_output "$captured_files")
-
-  echo "$files"
-}
-
-buffer_name="fzf-files-buffer"
-temp_buffer="fzf-files-temp-buffer"
 files=()
 
 if [ "$1" = "--selected-pane-history" ]; then
-  # capture all history in the current pane
-  tmux capture-pane -J -S - -E - -b "$buffer_name"
-  files=("$(parse)")
+  while IFS= read -r file; do
+    files+=("$file")
+  done < <(tmux capture-pane -J -S- -E- -p | parse_files)
 elif [ "$1" = "--all-pane-history" ]; then
   # capture each pane history in the current window
   panes=$(tmux list-panes -F '#{pane_id} #{pane_current_command} #{pane_current_path}')
@@ -31,32 +19,30 @@ elif [ "$1" = "--all-pane-history" ]; then
   while IFS= read -r pane; do
     pane_id=$(echo "$pane" | awk '{print $1}')
 
-    tmux capture-pane -t "$pane_id" -J -S - -E - -b "$temp_buffer"
-    pane_output=$(tmux save-buffer -b "$temp_buffer" -)
-
-    tmux set-buffer -b "$buffer_name" -a "$pane_output"
+    while IFS= read -r file; do
+      files+=("$file")
+    done < <(tmux capture-pane -t "$pane_id" -J -S - -E - -p | parse_files)
   done <<<"$panes"
-
-  files+=("$(parse)")
 else
   # capture content visible in the current pane
-  tmux capture-pane -J -b "$buffer_name"
-  files=("$(parse)")
+  while IFS= read -r file; do
+    files+=("$file")
+  done < <(tmux capture-pane -J -p | parse_files)
 fi
 
-# TODO: figure out a way to remove this duplicated call
-# calling parse files again to remove duplicates
-unique_files=$(parse_files "${files[@]}")
-
-if [ -z "$unique_files" ]; then
+if [ ${#files[@]} -eq 0 ]; then
   echo ""
 else
   tmpfile=$(mktemp)
+  outfile=$(mktemp)
+  # go ahead and separate the files by new line. I think fzf loves this
+  printf "%s\n" "${files[@]}" >"$tmpfile"
 
-  tmux display-popup -E "echo \"$unique_files\" | sed '/^[[:space:]]*$/d' | fzf -m > $tmpfile"
+  tmux display-popup -E "fzf -m < \"$tmpfile\" > \"$outfile\""
 
-  selected_files=$(cat "$tmpfile")
+  selected_files=$(cat "$outfile")
   rm "$tmpfile"
+  rm "$outfile"
 
   echo "$selected_files"
 fi
