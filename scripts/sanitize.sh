@@ -5,8 +5,7 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/awk_pane_files.sh"
 
 sanitize_pane_output() {
-  echo "$1" |
-    remove_invalid_characters |
+  remove_invalid_characters |
     remove_http_ftp |
     handle_home_folder_expansion
 }

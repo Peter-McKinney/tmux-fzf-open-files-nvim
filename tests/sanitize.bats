@@ -24,7 +24,7 @@ source "$BATS_TEST_DIRNAME/../scripts/sanitize.sh"
 
   expected_result="node_modules/jest-mock/build/index.js:839:25"
 
-  result="$(sanitize_pane_output "$input")"
+  result="$(echo "$input" | sanitize_pane_output)"
   echo "$result"
   echo "$expected_result"
   [ "$result" = "$expected_result" ]
