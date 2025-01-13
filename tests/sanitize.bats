@@ -3,18 +3,18 @@
 source "$BATS_TEST_DIRNAME/../scripts/sanitize.sh"
 
 @test "handle home folder expansion" {
-  result="$(handle_home_folder_expansion "~/something/readme.md")"
+  result="$(echo "~/something/readme.md" | handle_home_folder_expansion)"
   [ "$result" = "\$HOME/something/readme.md" ]
 }
 
 @test "remove_http_ftp should remove http urls" {
-  result="$(remove_http_ftp "https://github.com")"
+  result="$(echo "https://github.com" | remove_http_ftp)"
   echo "$result"
   [ "$result" = "" ]
 }
 
 @test "remove_http_ftp should remove ftp urls" {
-  result="$(remove_http_ftp "ftp://github.com")"
+  result="$(echo "ftp://github.com" | remove_http_ftp)"
   echo "$result"
   [ "$result" = "" ]
 }

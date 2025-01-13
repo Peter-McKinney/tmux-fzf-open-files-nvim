@@ -28,11 +28,11 @@ source "$BATS_TEST_DIRNAME/../scripts/awk_pane_files.sh"
 }
 
 @test "remove invalid characters" {
-  result="$(remove_invalid_characters "(&&here/is-dashes-in-name/a/file.txt)")"
+  result="$(echo "(&&here/is-dashes-in-name/a/file.txt)" | remove_invalid_characters)"
   [ "$result" = "here/is-dashes-in-name/a/file.txt" ]
 }
 
 @test "remove invalid characters quotes" {
-  result="$(remove_invalid_characters "\"\"(&&here/is-dashes-in-name/a/file.txt)")"
+  result="$(echo "\"\"(&&here/is-dashes-in-name/a/file.txt)" | remove_invalid_characters)"
   [ "$result" = "here/is-dashes-in-name/a/file.txt" ]
 }

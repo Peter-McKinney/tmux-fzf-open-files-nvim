@@ -5,7 +5,7 @@
 # modified this to allow for incremental parsing using streaming.
 # intended use is through a pipe like: tmux capture-pane | parse-files
 parse_files() {
-  awk '
+  LC_ALL=C awk '
   BEGIN { RS = "\n"; FS = ""; }
   {
     while (match($0, /[^[:space:]"]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+(:[0-9]+:[0-9]+)?/)) {
@@ -21,6 +21,5 @@ parse_files() {
 # remove invalid file path characters by using gsub with an allow list regular expression
 # temporarily override locale settings for awk command
 remove_invalid_characters() {
-  pristine=$(echo "$1" | LC_ALL=C awk '{ gsub(/[^[:alnum:][:space:].:_~\/-]/, "", $0); print }')
-  echo "$pristine"
+  LC_ALL=C awk '{ gsub(/[^[:alnum:][:space:].:_~\/-]/, "", $0); print }'
 }
