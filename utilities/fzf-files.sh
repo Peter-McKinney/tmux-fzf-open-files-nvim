@@ -36,7 +36,7 @@ else
   tmpfile=$(mktemp)
   outfile=$(mktemp)
   # go ahead and separate the files by new line. I think fzf loves this
-  printf "%s\n" "${files[@]}" >"$tmpfile"
+  printf "%s\n" "${files[@]}" | awk 'NF' >"$tmpfile"
 
   tmux display-popup -E "fzf -m < \"$tmpfile\" > \"$outfile\""
 
