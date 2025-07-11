@@ -4,6 +4,9 @@
 source "$BATS_TEST_DIRNAME/mock_tmux.sh"
 
 setup() {
+  # Enable test mode to mock fzf check
+  export TMUX_FZF_TEST_MODE=1
+  
   # Clear any existing options and binds
   unset TMUX_OPTIONS
   unset TMUX_BINDS
@@ -12,6 +15,11 @@ setup() {
   unset TMUX_OPTION_open_file_nvim_all_history_key
   declare -a TMUX_BINDS
   export TMUX_BINDS
+}
+
+teardown() {
+  # Clean up test mode
+  unset TMUX_FZF_TEST_MODE
 }
 
 @test "default bindings use F, H, G when no custom options set" {
