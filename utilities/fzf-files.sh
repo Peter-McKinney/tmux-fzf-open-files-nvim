@@ -38,12 +38,7 @@ else
   # go ahead and separate the files by new line. I think fzf loves this
   printf "%s\n" "${files[@]}" | awk 'NF' >"$tmpfile"
 
-  if [[ "$TMUX_FZF_TEST_MODE" == "1" ]]; then
-    # In test mode, just select the first file from the list
-    head -n 1 "$tmpfile" > "$outfile"
-  else
-    tmux display-popup -E "fzf -m < \"$tmpfile\" > \"$outfile\""
-  fi
+  tmux display-popup -E "fzf -m < \"$tmpfile\" > \"$outfile\""
 
   selected_files=$(cat "$outfile")
   rm "$tmpfile"
