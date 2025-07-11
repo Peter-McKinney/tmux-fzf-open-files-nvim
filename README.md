@@ -40,25 +40,25 @@ Please make sure that fzf is installed by following the directions over at: http
 
 | Variable Name                   | Description                                                           | Default Binding |
 |---------------------------------|-----------------------------------------------------------------------|-----------------|
-| @open-file-nvim-key             | Parses the current visible pane output for filenames                  | prefix + o      |
-| @open-file-nvim-all-key         | Parses the entire available history in the current pane for filenames | prefix + O      |
-| @open-file-nvim-all-history-key | Parses the entire history from all panes in a window                  | prefix + A      |
+| @open-file-nvim-key             | Parses the current visible pane output for filenames                  | prefix + F      |
+| @open-file-nvim-all-key         | Parses the entire available history in the current pane for filenames | prefix + H      |
+| @open-file-nvim-all-history-key | Parses the entire history from all panes in a window                  | prefix + G      |
 
 ### Capture the output visible in the current pane: 
 
-The default binding uses `o` so `prefix + o` will run the process to find files in the current pane output. A new horizontal pane will be opened to the right of the current pane. The pane visible text will be sent to `fzf -m` multi select mode so that multiple files may be selected and sent to the $EDITOR.
+The default binding uses `F` so `prefix + F` will run the process to find files in the current pane output. A new horizontal pane will be opened to the right of the current pane. The pane visible text will be sent to `fzf -m` multi select mode so that multiple files may be selected and sent to the $EDITOR.
 
 https://github.com/user-attachments/assets/4bb92004-d29c-4849-9633-650b63519e94
 
 ### Capture the entire history of the current pane:
 
-The default binding uses `O` so `prefix + O` will run the above process for the entire history of the current pane.
+The default binding uses `H` so `prefix + H` will run the above process for the entire history of the current pane.
 
 https://github.com/user-attachments/assets/bc5c7bcf-7c3a-4cbf-b202-e5137db4a827
 
 ### Capture the entire history of all panes in a window:
 
-The default binding uses `A` so `prefix + A` will run the above process for the entire history of all panes in a tmux window. This operation can be expensive.
+The default binding uses `G` so `prefix + G` will run the above process for the entire history of all panes in a tmux window. This operation can be expensive.
 
 https://github.com/user-attachments/assets/8186930c-4881-455c-922a-1d7896225df1
 
