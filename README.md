@@ -70,6 +70,14 @@ set -g @open-file-nvim-all-key {newbinding}
 set -g @open-file-nvim-all-history-key {newbinding}
 ```
 
+### Enable cross-window neovim search
+
+By default, the plugin only searches for neovim instances in the current tmux window. To enable searching across all windows in the current session and automatically switch to the window containing neovim:
+
+```bash
+set -g @tmux-open-file-nvim-search-all-windows on
+```
+
 ## Development
 
 ### Link plugin source locally for testing
