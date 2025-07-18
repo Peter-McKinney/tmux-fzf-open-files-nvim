@@ -13,7 +13,7 @@ find_nvim_pane() {
   
   if [[ "$search_across_windows" == "on" ]]; then
     # search across all windows in current session
-    pane_info=$(tmux list-panes -a -F '#{session_name} #{window_id} #{pane_id} #{pane_current_command}' | grep "^$current_session " | grep "nvim")
+    pane_info=$(tmux list-panes -a -F '#{session_name} #{window_id} #{pane_id} #{pane_current_command}' | grep "^$current_session " | grep "nvim" | head -1)
     if [[ -n "$pane_info" ]]; then
       window_id=$(echo "$pane_info" | awk '{print $2}')
       pane_id=$(echo "$pane_info" | awk '{print $3}')
@@ -21,7 +21,7 @@ find_nvim_pane() {
     fi
   else
     # search only in current window
-    pane_info=$(tmux list-panes -F '#{window_id} #{pane_id} #{pane_current_command}' | grep "nvim")
+    pane_info=$(tmux list-panes -F '#{window_id} #{pane_id} #{pane_current_command}' | grep "nvim" | head -1)
     if [[ -n "$pane_info" ]]; then
       window_id=$(echo "$pane_info" | awk '{print $1}')
       pane_id=$(echo "$pane_info" | awk '{print $2}')

@@ -9,16 +9,32 @@ fi
 # Main function to handle tmux commands
 handle_tmux_command() {
   case "$*" in
-    "list-panes -F #{pane_id} #{pane_current_command}")
-      echo "%1 nvim"
-      echo "%2 bash"
-      echo "%3 nvim"
+    "list-panes -F #{window_id} #{pane_id} #{pane_current_command}")
+      echo "@0 %1 nvim"
+      echo "@0 %2 bash"
+      echo "@0 %3 nvim"
+      ;;
+    "list-panes -a -F #{session_name} #{window_id} #{pane_id} #{pane_current_command}")
+      echo "test_session @0 %1 nvim"
+      echo "test_session @0 %2 bash"
+      echo "test_session @0 %3 nvim"
+      echo "test_session @1 %4 bash"
+      echo "test_session @1 %5 nvim"
+      ;;
+    "display-message -p #S")
+      echo "test_session"
       ;;
     "send-keys -t %1 :echo 'Hello from tmux!' Enter")
       echo "Command sent to Neovim pane"
       ;;
     "select-pane -t %1")
       echo "Focused pane %1"
+      ;;
+    "select-window -t @0")
+      echo "Switched to window @0"
+      ;;
+    "select-window -t @1")
+      echo "Switched to window @1"
       ;;
     show-option\ -gqv\ @*)
       # Extract the option name and convert to environment variable format
