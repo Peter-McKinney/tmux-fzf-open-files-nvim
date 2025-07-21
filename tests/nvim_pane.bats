@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source "$BATS_TEST_DIRNAME/../scripts/tmux_find_nvim_pane.sh"
+source "$BATS_TEST_DIRNAME/../scripts/tmux_find_nvim_target.sh"
 
 setup() {
   # using this bash function to mock the tmux command for this test
@@ -14,7 +14,7 @@ teardown() {
 }
 
 @test "should return first tmux nvim pane when search-all-windows is off (default)" {
-  result="$(find_nvim_pane)"
+  result="$(find_nvim_target)"
   [ "$result" = "@0 %1" ]
 }
 
@@ -43,7 +43,7 @@ teardown() {
     esac
   }
 
-  result="$(find_nvim_pane)"
+  result="$(find_nvim_target)"
   [ "$result" = "@1 %4" ]
 }
 
@@ -67,6 +67,6 @@ teardown() {
     esac
   }
 
-  result="$(find_nvim_pane)"
+  result="$(find_nvim_target)"
   [ "$result" = "" ]
 }
