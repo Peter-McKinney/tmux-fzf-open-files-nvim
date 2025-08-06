@@ -16,7 +16,7 @@ else
   search_across_windows=$(tmux show-option -gqv @tmux-open-file-nvim-search-all-windows)
   nvim_command="$(to_tabedit_strings "$editor_files")"
 
-  read -r nvim_window_id nvim_pane_id <<< "$(get_nvim_pane)"
+  read -r nvim_window_id nvim_pane_id <<<"$(get_nvim_pane)"
   tmux send-keys -t "$nvim_pane_id" Escape ":$nvim_command" Enter
 
   # check if searching nvim across windows is enabled (default: off)

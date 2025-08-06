@@ -29,7 +29,7 @@ extract_pane_info() {
   fi
 }
 
-find_nvim_target () {
+find_nvim_target() {
   search_across_windows=$(tmux show-option -gqv @tmux-open-file-nvim-search-all-windows)
 
   if [[ "$search_across_windows" == "on" ]]; then
