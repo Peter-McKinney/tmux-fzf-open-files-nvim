@@ -24,22 +24,22 @@ teardown() {
   # Mock scenario where current window has no nvim, but another window does
   tmux() {
     case "$*" in
-    "display-message -p #S")
-      echo "test_session"
-      ;;
-    "list-panes -a -F #{session_name} #{window_id} #{pane_id} #{pane_current_command}")
-      echo "test_session @0 %1 bash"
-      echo "test_session @0 %2 bash"
-      echo "test_session @1 %3 bash"
-      echo "test_session @1 %4 nvim"
-      ;;
-    "show-option -gqv @tmux-open-file-nvim-search-all-windows")
-      echo "on"
-      ;;
-    *)
-      echo "Unknown tmux command: $*" >&2
-      exit 1
-      ;;
+      "display-message -p #S")
+        echo "test_session"
+        ;;
+      "list-panes -a -F #{session_name} #{window_id} #{pane_id} #{pane_current_command}")
+        echo "test_session @0 %1 bash"
+        echo "test_session @0 %2 bash"
+        echo "test_session @1 %3 bash"
+        echo "test_session @1 %4 nvim"
+        ;;
+      "show-option -gqv @tmux-open-file-nvim-search-all-windows")
+        echo "on"
+        ;;
+      *)
+        echo "Unknown tmux command: $*" >&2
+        exit 1
+        ;;
     esac
   }
 
@@ -53,17 +53,17 @@ teardown() {
   # Mock scenario where current window has no nvim, but another window does
   tmux() {
     case "$*" in
-    "show-option -gqv @tmux-open-file-nvim-search-all-windows")
-      echo "off"
-      ;;
-    "list-panes -F #{window_id} #{pane_id} #{pane_current_command}")
-      echo "@0 %1 bash"
-      echo "@0 %2 bash"
-      ;;
-    *)
-      echo "Unknown tmux command: $*" >&2
-      exit 1
-      ;;
+      "show-option -gqv @tmux-open-file-nvim-search-all-windows")
+        echo "off"
+        ;;
+      "list-panes -F #{window_id} #{pane_id} #{pane_current_command}")
+        echo "@0 %1 bash"
+        echo "@0 %2 bash"
+        ;;
+      *)
+        echo "Unknown tmux command: $*" >&2
+        exit 1
+        ;;
     esac
   }
 
