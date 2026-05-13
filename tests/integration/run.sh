@@ -114,8 +114,8 @@ run_case() {
 tmux -L "$SOCKET" new-session -d -s "$SESSION" -x 200 -y 50
 
 run_case "visible pane (default)" "scripts/awk_pane_files.sh"
-run_case "selected pane history"  "scripts/awk_pane_files.sh" "--selected-pane-history"
-run_case "all pane history"       "scripts/awk_pane_files.sh" "--all-pane-history"
+run_case "selected pane history" "scripts/awk_pane_files.sh" "--selected-pane-history"
+run_case "all pane history" "scripts/awk_pane_files.sh" "--all-pane-history"
 
 echo
 echo "$PASS passed, $FAIL failed"
