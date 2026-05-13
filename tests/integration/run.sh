@@ -34,37 +34,29 @@ STUB
 chmod +x "$WORKDIR/fzf"
 
 # --- Runner: bypasses display-popup rendering, runs the inner command. ---
-cat >"$WORKDIR/runner.sh" <<RUNNER
-#!/usr/bin/env bash
+{
+  printf '#!/usr/bin/env bash\nexport WORKDIR=%q PLUGIN_DIR=%q\n' "$WORKDIR" "$PLUGIN_DIR"
+  cat <<'RUNNER'
 set -euo pipefail
 
 tmux() {
-  if [[ "\$1" == "display-popup" ]]; then
+  if [[ "$1" == "display-popup" ]]; then
     touch "$WORKDIR/popup_invoked"
-    local cmd="" found=0
-    for arg in "\$@"; do
-      if [[ \$found -eq 1 ]]; then
-        cmd="\$arg"
-        break
-      fi
-      [[ "\$arg" == "-E" ]] && found=1
-    done
-    eval "\$cmd"
-    return \$?
+    [[ "${*: -2:1}" == "-E" ]] || { echo "popup wrapper: expected -E before command" >&2; return 1; }
+    eval "${*: -1}"
+    return
   fi
-  command tmux "\$@"
+  command tmux "$@"
 }
 export -f tmux
 
-PATH="$WORKDIR:\$PATH" bash "$PLUGIN_DIR/utilities/fzf-files.sh" "\${1:-}"
+PATH="$WORKDIR:$PATH" bash "$PLUGIN_DIR/utilities/fzf-files.sh" "${1:-}"
 RUNNER
+} >"$WORKDIR/runner.sh"
 chmod +x "$WORKDIR/runner.sh"
 
 run_case() {
-  local name="$1"
-  local expected="$2"
-  shift 2
-  local arg="${1:-}"
+  local name="$1" expected="$2" arg="${3:-}"
 
   rm -f "$WORKDIR/out" "$WORKDIR/done" "$WORKDIR/popup_invoked"
 
@@ -83,32 +75,21 @@ run_case() {
     sleep 0.25
   done
 
-  if [ ! -f "$WORKDIR/done" ]; then
-    echo "[FAIL] $name: runner did not complete within 10s"
-    FAIL=$((FAIL + 1))
-    return
-  fi
-
   local result
-  result="$(cat "$WORKDIR/out")"
+  result="$(cat "$WORKDIR/out" 2>/dev/null || true)"
 
-  if [ ! -f "$WORKDIR/popup_invoked" ]; then
-    echo "[FAIL] $name: display-popup was never invoked"
-    echo "       output: $result"
-    FAIL=$((FAIL + 1))
+  if [ -f "$WORKDIR/done" ] && [ -f "$WORKDIR/popup_invoked" ] && [[ "$result" == "$expected" ]]; then
+    echo "[PASS] $name"
+    PASS=$((PASS + 1))
     return
   fi
 
-  if [[ "$result" != "$expected" ]]; then
-    echo "[FAIL] $name"
-    echo "       expected: $expected"
-    echo "       got:      $result"
-    FAIL=$((FAIL + 1))
-    return
-  fi
-
-  echo "[PASS] $name"
-  PASS=$((PASS + 1))
+  echo "[FAIL] $name"
+  [ -f "$WORKDIR/done" ] || echo "       runner did not complete within 10s"
+  [ -f "$WORKDIR/popup_invoked" ] || echo "       display-popup was never invoked"
+  echo "       expected: $expected"
+  echo "       got:      $result"
+  FAIL=$((FAIL + 1))
 }
 
 tmux -L "$SOCKET" new-session -d -s "$SESSION" -x 200 -y 50
