@@ -8,7 +8,7 @@ parse_files() {
   LC_ALL=C awk '
   BEGIN { RS = "\n"; FS = ""; }
   {
-    while (match($0, /[^[:space:]"]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+(:[0-9]+:[0-9]+)?/)) {
+    while (match($0, /[^[:space:]"]*\/[[:alnum:]._-]+(\/[[:alnum:]._-]+)*\.[[:alnum:]]+(:[0-9]+(:[0-9]+)?)?/)) {
       path = substr($0, RSTART, RLENGTH)
       if (!seen[path]++) {
         print path
