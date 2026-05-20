@@ -8,7 +8,7 @@ source "$CURRENT_DIR/scripts/file_strings_to_nvim.sh"
 
 check_fzf
 
-editor_files=$(source "$CURRENT_DIR/utilities/fzf-files.sh" "$1")
+editor_files=$(bash "$CURRENT_DIR/utilities/fzf-files.sh" "$1")
 
 if [[ -z "$editor_files" ]]; then
   echo "No files found or selected through fzf"

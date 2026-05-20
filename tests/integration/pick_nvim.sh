@@ -91,9 +91,8 @@ run_case() {
     '
   )
 
-  local picked_wid picked_pid picked_idx
-  # shellcheck disable=SC2034  # picked_pid captured for parity with caller layout
-  read -r picked_wid picked_pid <<<"$result"
+  local picked_wid picked_idx
+  read -r picked_wid _ <<<"$result"
   if [[ -z "$picked_wid" ]]; then
     picked_idx="(none)"
   else
