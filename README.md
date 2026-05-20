@@ -76,6 +76,14 @@ set -g @open-file-nvim-all-history-key {newbinding}
 
 The plugin searches every window in the current session for a pane running neovim. If exactly one is found, the selected files are sent to it (switching tmux to that window if needed). If more than one is found, a tmux popup running fzf opens so you can choose which instance to target. Cancelling the popup aborts without sending the files.
 
+### Deprecated: cross-window neovim search
+
+```bash
+set -g @tmux-open-file-nvim-search-all-windows on
+```
+
+This option previously opted into searching every window in the current session for a neovim pane. That behavior is now the default and the option is ignored — you can leave it in your config (it has no effect) or remove it.
+
 ## Development
 
 ### Link plugin source locally for testing
