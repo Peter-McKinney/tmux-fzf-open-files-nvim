@@ -99,7 +99,10 @@ teardown() {
         ;;
       "display-popup")
         # Expect: display-popup -E "<command>"
-        [ "$2" = "-E" ] || { echo "popup wrapper: expected -E flag" >&2; return 1; }
+        [ "$2" = "-E" ] || {
+          echo "popup wrapper: expected -E flag" >&2
+          return 1
+        }
         touch "$popup_log"
         # Run the inner command with a stub fzf that picks the first row.
         local cmd="$3"
