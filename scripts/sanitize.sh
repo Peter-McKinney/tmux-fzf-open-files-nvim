@@ -2,6 +2,7 @@
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# shellcheck source=scripts/awk_pane_files.sh
 source "$CURRENT_DIR/awk_pane_files.sh"
 
 sanitize_pane_output() {

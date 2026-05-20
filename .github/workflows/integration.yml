@@ -19,5 +19,5 @@ jobs:
       - name: Run integration test
         run: bash tests/integration/run.sh
 
-      - name: Run nearest-nvim integration test
-        run: bash tests/integration/nearest_nvim.sh
+      - name: Run pick-nvim integration test
+        run: bash tests/integration/pick_nvim.sh

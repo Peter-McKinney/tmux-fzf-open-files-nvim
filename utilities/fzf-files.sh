@@ -2,8 +2,11 @@
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# shellcheck source=scripts/check_fzf_install.sh
 source "$CURRENT_DIR/../scripts/check_fzf_install.sh"
+# shellcheck source=scripts/sanitize.sh
 source "$CURRENT_DIR/../scripts/sanitize.sh"
+# shellcheck source=scripts/awk_pane_files.sh
 source "$CURRENT_DIR/../scripts/awk_pane_files.sh"
 
 files=()

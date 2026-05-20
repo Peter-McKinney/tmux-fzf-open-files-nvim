@@ -4,7 +4,7 @@
 [![Run shellcheck](https://github.com/Peter-McKinney/tmux-fzf-open-files-nvim/actions/workflows/shellcheck.yml/badge.svg?branch=main)](https://github.com/Peter-McKinney/tmux-fzf-open-files-nvim/actions/workflows/shellcheck.yml)
 [![Format Check shfmt](https://github.com/Peter-McKinney/tmux-fzf-open-files-nvim/actions/workflows/formatter.yml/badge.svg?branch=main)](https://github.com/Peter-McKinney/tmux-fzf-open-files-nvim/actions/workflows/formatter.yml)
 
-A tmux plugin to parse terminal output for filenames and open them in neovim. It works by creating a tmux binding to copy the currently selected panes content, match output that is a file path ending in an extension or with location information 83:57, pass the file paths to fzf, and open the fzf selected files in your default $EDITOR (only tested with neovim currently). The plugin will search for panes in the current window running neovim and open the selected files as new tabs. If a current neovim instances does not exist, a new horizontal pane will be created to host neovim and the files will be opened there.
+A tmux plugin to parse terminal output for filenames and open them in neovim. It works by creating a tmux binding to copy the currently selected panes content, match output that is a file path ending in an extension or with location information 83:57, pass the file paths to fzf, and open the fzf selected files in your default $EDITOR (only tested with neovim currently). The plugin searches every window in the current tmux session for a pane running neovim and opens the selected files as new tabs. If more than one neovim instance is running, a tmux popup with fzf appears so you can pick which one to send the files to. If no neovim instance exists, a new horizontal pane is created to host neovim and the files are opened there.
 
 
 
@@ -72,13 +72,17 @@ set -g @open-file-nvim-all-key {newbinding}
 set -g @open-file-nvim-all-history-key {newbinding}
 ```
 
-### Enable cross-window neovim search
+### Pick a target when multiple neovim instances are open
 
-By default, the plugin only searches for neovim instances in the current tmux window. To enable searching across all windows in the current session and automatically switch to the window containing neovim:
+The plugin searches every window in the current session for a pane running neovim. If exactly one is found, the selected files are sent to it (switching tmux to that window if needed). If more than one is found, a tmux popup running fzf opens so you can choose which instance to target. Cancelling the popup aborts without sending the files.
+
+### Deprecated: cross-window neovim search
 
 ```bash
 set -g @tmux-open-file-nvim-search-all-windows on
 ```
+
+This option previously opted into searching every window in the current session for a neovim pane. That behavior is now the default and the option is ignored — you can leave it in your config (it has no effect) or remove it.
 
 ## Development
 
