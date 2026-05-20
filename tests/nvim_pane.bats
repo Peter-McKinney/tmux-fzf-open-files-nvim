@@ -2,78 +2,58 @@
 
 source "$BATS_TEST_DIRNAME/../scripts/tmux_find_nvim_target.sh"
 
+NL=$'\n'
+TAB=$'\t'
+
 setup() {
-  # using this bash function to mock the tmux command for this test
-  tmux() {
-    "$(pwd)/tests/mock_tmux.sh" "$@"
-  }
+  TMPDIR_TEST=$(mktemp -d)
+  export TMPDIR_TEST
 }
 
 teardown() {
-  unset -f tmux
+  rm -rf "$TMPDIR_TEST"
+  unset -f tmux fzf
 }
 
-@test "should return first tmux nvim pane when search-all-windows is off (default)" {
-  result="$(find_nvim_target)"
-  [ "$result" = "@0 %1" ]
-}
-
-@test "should find nvim in different window when search-all-windows is on" {
-  export TMUX_OPTION_tmux_open_file_nvim_search_all_windows="on"
-
-  # Mock scenario where current window has no nvim, but another window does
+@test "find_nvim_target returns empty when no nvim is running in the session" {
   tmux() {
-    case "$*" in
-      "display-message -p #S")
+    case "$1 $2" in
+      "display-message -p")
         echo "test_session"
         ;;
-      "display-message -p #I")
-        echo "1"
-        ;;
-      "list-panes -a -F #{session_name} #{window_index} #{window_id} #{pane_id} #{pane_current_command}")
-        echo "test_session 1 @0 %1 bash"
-        echo "test_session 1 @0 %2 bash"
-        echo "test_session 2 @1 %3 bash"
-        echo "test_session 2 @1 %4 nvim"
-        ;;
-      "show-option -gqv @tmux-open-file-nvim-search-all-windows")
-        echo "on"
+      "list-panes -a")
+        echo -e "test_session\t1\teditor\t@0\t%1\tbash\t/home/u"
+        echo -e "test_session\t1\teditor\t@0\t%2\tzsh\t/home/u"
         ;;
       *)
         echo "Unknown tmux command: $*" >&2
-        exit 1
+        return 1
         ;;
     esac
   }
 
   result="$(find_nvim_target)"
-  [ "$result" = "@1 %4" ]
+  [ "$result" = "" ]
 }
 
-@test "should pick the nearest nvim instance when multiple exist across windows" {
-  export TMUX_OPTION_tmux_open_file_nvim_search_all_windows="on"
-
-  # Current window is index 5; nvim exists in windows 1, 4, and 8 — window 4 is nearest
+@test "find_nvim_target returns sole nvim instance without invoking popup" {
   tmux() {
-    case "$*" in
-      "display-message -p #S")
+    case "$1 $2" in
+      "display-message -p")
         echo "test_session"
         ;;
-      "display-message -p #I")
-        echo "5"
+      "list-panes -a")
+        echo -e "test_session\t1\teditor\t@0\t%1\tbash\t/home/u"
+        echo -e "test_session\t2\tcode\t@1\t%2\tnvim\t/home/u/repo"
+        echo -e "test_session\t3\tlogs\t@2\t%3\tbash\t/home/u"
         ;;
-      "list-panes -a -F #{session_name} #{window_index} #{window_id} #{pane_id} #{pane_current_command}")
-        echo "test_session 1 @0 %1 nvim"
-        echo "test_session 4 @1 %2 nvim"
-        echo "test_session 5 @2 %3 bash"
-        echo "test_session 8 @3 %4 nvim"
-        ;;
-      "show-option -gqv @tmux-open-file-nvim-search-all-windows")
-        echo "on"
+      "display-popup -E"*)
+        echo "popup should not have been invoked" >&2
+        return 1
         ;;
       *)
         echo "Unknown tmux command: $*" >&2
-        exit 1
+        return 1
         ;;
     esac
   }
@@ -82,53 +62,83 @@ teardown() {
   [ "$result" = "@1 %2" ]
 }
 
-@test "should prefer nvim in the current window over nvim in other windows" {
-  export TMUX_OPTION_tmux_open_file_nvim_search_all_windows="on"
-
+@test "find_nvim_target only considers panes in the current session" {
   tmux() {
-    case "$*" in
-      "display-message -p #S")
-        echo "test_session"
+    case "$1 $2" in
+      "display-message -p")
+        echo "alpha"
         ;;
-      "display-message -p #I")
-        echo "3"
-        ;;
-      "list-panes -a -F #{session_name} #{window_index} #{window_id} #{pane_id} #{pane_current_command}")
-        echo "test_session 1 @0 %1 nvim"
-        echo "test_session 3 @1 %2 bash"
-        echo "test_session 3 @1 %3 nvim"
-        echo "test_session 4 @2 %4 nvim"
-        ;;
-      "show-option -gqv @tmux-open-file-nvim-search-all-windows")
-        echo "on"
+      "list-panes -a")
+        echo -e "alpha\t1\teditor\t@0\t%1\tnvim\t/home/u/a"
+        echo -e "beta\t1\teditor\t@9\t%9\tnvim\t/home/u/b"
         ;;
       *)
         echo "Unknown tmux command: $*" >&2
-        exit 1
+        return 1
         ;;
     esac
   }
 
   result="$(find_nvim_target)"
-  [ "$result" = "@1 %3" ]
+  [ "$result" = "@0 %1" ]
 }
 
-@test "should not find nvim in different window when search-all-windows is off" {
-  export TMUX_OPTION_tmux_open_file_nvim_search_all_windows="off"
+@test "find_nvim_target shows fzf popup when multiple nvim instances exist" {
+  popup_log="$TMPDIR_TEST/popup_invoked"
+  export popup_log
 
-  # Mock scenario where current window has no nvim, but another window does
   tmux() {
-    case "$*" in
-      "show-option -gqv @tmux-open-file-nvim-search-all-windows")
-        echo "off"
+    case "$1" in
+      "display-message")
+        echo "test_session"
         ;;
-      "list-panes -F #{window_id} #{pane_id} #{pane_current_command}")
-        echo "@0 %1 bash"
-        echo "@0 %2 bash"
+      "list-panes")
+        echo -e "test_session\t1\teditor\t@0\t%1\tnvim\t/home/u/a"
+        echo -e "test_session\t2\tlogs\t@1\t%2\tbash\t/home/u"
+        echo -e "test_session\t3\tnotes\t@2\t%3\tnvim\t/home/u/b"
+        ;;
+      "display-popup")
+        # Expect: display-popup -E "<command>"
+        [ "$2" = "-E" ] || { echo "popup wrapper: expected -E flag" >&2; return 1; }
+        touch "$popup_log"
+        # Run the inner command with a stub fzf that picks the first row.
+        local cmd="$3"
+        fzf() { awk 'NF { print; exit }'; }
+        export -f fzf
+        eval "$cmd"
         ;;
       *)
         echo "Unknown tmux command: $*" >&2
-        exit 1
+        return 1
+        ;;
+    esac
+  }
+
+  result="$(find_nvim_target)"
+  [ -f "$popup_log" ]
+  [ "$result" = "@0 %1" ]
+}
+
+@test "find_nvim_target returns empty when user cancels the popup" {
+  tmux() {
+    case "$1" in
+      "display-message")
+        echo "test_session"
+        ;;
+      "list-panes")
+        echo -e "test_session\t1\teditor\t@0\t%1\tnvim\t/home/u/a"
+        echo -e "test_session\t3\tnotes\t@2\t%3\tnvim\t/home/u/b"
+        ;;
+      "display-popup")
+        # User cancels: fzf writes nothing to the outfile.
+        local cmd="$3"
+        fzf() { return 130; }
+        export -f fzf
+        eval "$cmd" || true
+        ;;
+      *)
+        echo "Unknown tmux command: $*" >&2
+        return 1
         ;;
     esac
   }
