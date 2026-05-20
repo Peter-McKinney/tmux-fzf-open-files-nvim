@@ -33,10 +33,17 @@ find_nvim_target() {
   search_across_windows=$(tmux show-option -gqv @tmux-open-file-nvim-search-all-windows)
 
   if [[ "$search_across_windows" == "on" ]]; then
-    # search across all windows in current session
+    # search across all windows in current session, picking the nearest by window index
     current_session=$(tmux display-message -p '#S')
-    pane_info=$(tmux list-panes -a -F '#{session_name} #{window_id} #{pane_id} #{pane_current_command}' | grep "^$current_session " | grep "nvim" | head -1)
-    extract_pane_info "$pane_info" 2 3
+    current_window_index=$(tmux display-message -p '#I')
+    tmux list-panes -a -F '#{session_name} #{window_index} #{window_id} #{pane_id} #{pane_current_command}' \
+      | awk -v sess="$current_session" -v cur="$current_window_index" '
+          $1 == sess && $5 == "nvim" {
+            d = $2 - cur; if (d < 0) d = -d
+            if (best == "" || d < best_d) { best_d = d; best = $3 " " $4 }
+          }
+          END { if (best != "") print best }
+        '
   else
     # search only in current window
     pane_info=$(tmux list-panes -F '#{window_id} #{pane_id} #{pane_current_command}' | grep "nvim" | head -1)

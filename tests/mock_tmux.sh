@@ -14,15 +14,18 @@ handle_tmux_command() {
       echo "@0 %2 bash"
       echo "@0 %3 nvim"
       ;;
-    "list-panes -a -F #{session_name} #{window_id} #{pane_id} #{pane_current_command}")
-      echo "test_session @0 %1 nvim"
-      echo "test_session @0 %2 bash"
-      echo "test_session @0 %3 nvim"
-      echo "test_session @1 %4 bash"
-      echo "test_session @1 %5 nvim"
+    "list-panes -a -F #{session_name} #{window_index} #{window_id} #{pane_id} #{pane_current_command}")
+      echo "test_session 1 @0 %1 nvim"
+      echo "test_session 1 @0 %2 bash"
+      echo "test_session 1 @0 %3 nvim"
+      echo "test_session 2 @1 %4 bash"
+      echo "test_session 2 @1 %5 nvim"
       ;;
     "display-message -p #S")
       echo "test_session"
+      ;;
+    "display-message -p #I")
+      echo "1"
       ;;
     "send-keys -t %1 :echo 'Hello from tmux!' Enter")
       echo "Command sent to Neovim pane"
